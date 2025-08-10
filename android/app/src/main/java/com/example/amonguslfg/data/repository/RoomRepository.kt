@@ -1,25 +1,26 @@
-
 package com.example.amonguslfg.data.repository
 
 import com.example.amonguslfg.api.ApiService
 import com.example.amonguslfg.model.Room
-
+import com.example.amonguslfg.model.RoomCreate
 import com.example.amonguslfg.model.RoomUpdate
+import javax.inject.Inject
 
-class RoomRepository(private val apiService: ApiService) {
+class RoomRepository @Inject constructor(private val apiService: ApiService) {
+
     suspend fun getRooms(): List<Room> {
         return apiService.getRooms()
     }
 
-    suspend fun createRoom(room: RoomCreate): Room {
-        return apiService.createRoom(room)
+    suspend fun createRoom(deviceId: String, room: RoomCreate): Room {
+        return apiService.createRoom(deviceId, room)
     }
 
-    suspend fun updateRoom(roomId: Int, room: RoomUpdate): Room {
-        return apiService.updateRoom(roomId, room)
+    suspend fun updateRoom(deviceId: String, roomId: Int, room: RoomUpdate): Room {
+        return apiService.updateRoom(deviceId, roomId, room)
     }
 
-    suspend fun deleteRoom(roomId: Int) {
-        apiService.deleteRoom(roomId)
+    suspend fun deleteRoom(deviceId: String, roomId: Int) {
+        apiService.deleteRoom(deviceId, roomId)
     }
 }

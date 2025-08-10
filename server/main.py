@@ -65,6 +65,9 @@ def create_room(
     current_user: Annotated[models.User, Depends(get_current_user)],
     db: Session = Depends(get_db)
 ):
+    db_room = crud.get_room_by_code(db, room_code=room.room_code)
+    if db_room:
+        raise HTTPException(status_code=400, detail="このルームコードは既に使用されています")
     if room.is_special and not current_user.is_admin:
         raise HTTPException(status_code=403, detail="Only admins can create special rooms.")
     return crud.create_room(db=db, room=room, owner_id=current_user.id)

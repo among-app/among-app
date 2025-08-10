@@ -1,9 +1,8 @@
-
 package com.example.amonguslfg.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.Icons // Recommended to keep for other icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack // Import for AutoMirrored ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

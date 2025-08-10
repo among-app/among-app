@@ -1,4 +1,3 @@
-
 package com.example.amonguslfg.model
 
 data class User(

@@ -1,22 +1,22 @@
-
 package com.example.amonguslfg.ui.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.amonguslfg.model.Room
+import com.example.amonguslfg.model.User
 import com.example.amonguslfg.ui.theme.AmongUsLFGTheme
 import java.util.Date
-
-import androidx.compose.foundation.border
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun RoomItem(
@@ -75,25 +75,5 @@ fun RoomItem(
                 Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RoomItemPreview() {
-    AmongUsLFGTheme {
-        val sampleRoom = Room(
-            id = 1,
-            ownerName = "プレビューユーザー",
-            roomCode = "PREVIW",
-            currentPlayers = 5,
-            maxPlayers = 10,
-            regulation = "ガチ村",
-            modName = "SNR",
-            serverName = "アジア",
-            description = "これはプレビュー用の募集です。気軽に参加してください。",
-            createdAt = Date()
-        )
-        RoomItem(room = sampleRoom, modifier = Modifier.padding(8.dp))
     }
 }

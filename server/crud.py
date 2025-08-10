@@ -9,7 +9,7 @@ def get_user_by_device_id(db: Session, device_id: str):
 
 def create_user(db: Session, user: schemas.UserCreate):
     is_admin = False
-    if user.device_id == "ADMIN_DEVICE_ID": # Temporary for testing
+    if user.device_id == "YOUR_DEVICE_ID_HERE": # 修正してください
         is_admin = True
     db_user = models.User(device_id=user.device_id, username=user.username, is_admin=is_admin)
     db.add(db_user)
@@ -19,6 +19,9 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.User).offset(skip).limit(limit).all()
+
+def get_room_by_code(db: Session, room_code: str):
+    return db.query(models.Room).filter(models.Room.room_code == room_code).first()
 
 def update_user(db: Session, user_id: int, user_update: schemas.UserUpdate):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
@@ -38,10 +41,13 @@ def get_rooms(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Room).offset(skip).limit(limit).all()
 
 def create_room(db: Session, room: schemas.RoomCreate, owner_id: int):
+    # Convert list of regulations into a single comma-separated string
+    regulation_str = ",".join(room.regulation)
     db_room = models.Room(
         owner_id=owner_id,
         is_special=room.is_special,
-        **room.dict(exclude={"is_special"})
+        regulation=regulation_str,
+        **room.dict(exclude={"is_special", "regulation"})
     )
     db.add(db_room)
     db.commit()

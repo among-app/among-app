@@ -1,34 +1,42 @@
-
 package com.example.amonguslfg.api
 
+import com.example.amonguslfg.model.Announcement
+import com.example.amonguslfg.model.AnnouncementCreate
 import com.example.amonguslfg.model.Room
-import retrofit2.http.GET
-
+import com.example.amonguslfg.model.RoomCreate
 import com.example.amonguslfg.model.RoomUpdate
+import com.example.amonguslfg.model.User
+import com.example.amonguslfg.model.UserUpdate
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
+
+    @POST("register/")
+    suspend fun register(@Body deviceId: Map<String, String>): User
+
+    @GET("users/")
+    suspend fun getUsers(@Header("x-device-id") deviceId: String): List<User>
+
+    @PUT("users/{id}")
+    suspend fun updateUser(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body userUpdate: UserUpdate): User
+
     @GET("rooms/")
     suspend fun getRooms(): List<Room>
 
     @POST("rooms/")
-    suspend fun createRoom(@Body room: RoomCreate): Room
+    suspend fun createRoom(@Header("x-device-id") deviceId: String, @Body room: RoomCreate): Room
 
     @PUT("rooms/{room_id}")
-    suspend fun updateRoom(@Path("room_id") roomId: Int, @Body room: RoomUpdate): Room
-
-    import com.example.amonguslfg.model.Announcement
-
-    import com.example.amonguslfg.model.User
-import retrofit2.http.Header
+    suspend fun updateRoom(@Header("x-device-id") deviceId: String, @Path("room_id") roomId: Int, @Body room: RoomUpdate): Room
 
     @DELETE("rooms/{room_id}")
-    suspend fun deleteRoom(@Path("room_id") roomId: Int)
-
-    import com.example.amonguslfg.model.AnnouncementCreate
+    suspend fun deleteRoom(@Header("x-device-id") deviceId: String, @Path("room_id") roomId: Int)
 
     @GET("announcements/")
     suspend fun getAnnouncements(): List<Announcement>
@@ -39,17 +47,6 @@ import retrofit2.http.Header
     @PUT("announcements/{id}")
     suspend fun updateAnnouncement(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body announcement: AnnouncementCreate): Announcement
 
-    import com.example.amonguslfg.model.UserUpdate
-
     @DELETE("announcements/{id}")
     suspend fun deleteAnnouncement(@Header("x-device-id") deviceId: String, @Path("id") id: Int)
-
-    @GET("users/")
-    suspend fun getUsers(@Header("x-device-id") deviceId: String): List<User>
-
-    @PUT("users/{id}")
-    suspend fun updateUser(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body userUpdate: UserUpdate): User
-
-    @POST("register/")
-    suspend fun register(@Body deviceId: Map<String, String>): User
 }

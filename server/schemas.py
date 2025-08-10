@@ -30,12 +30,13 @@ class RoomBase(BaseModel):
     room_code: str
     current_players: int
     max_players: int
-    regulation: str
+    regulation: str # Keep this as string for response
     mod_name: str
     server_name: str
     description: Optional[str] = None
 
 class RoomCreate(RoomBase):
+    regulation: List[str] # Expect a list of strings on creation
     is_special: Optional[bool] = False
 
 class RoomUpdate(BaseModel):

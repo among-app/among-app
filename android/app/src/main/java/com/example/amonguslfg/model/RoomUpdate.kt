@@ -1,4 +1,3 @@
-
 package com.example.amonguslfg.model
 
 import com.google.gson.annotations.SerializedName
@@ -13,5 +12,7 @@ data class RoomUpdate(
     val modName: String? = null,
     @SerializedName("server_name")
     val serverName: String? = null,
-    val description: String? = null
+    val description: String? = null,
+    @SerializedName("is_special")
+    val isSpecial: Boolean? = null
 )

@@ -1,4 +1,3 @@
-
 package com.example.amonguslfg.model
 
 import com.google.gson.annotations.SerializedName

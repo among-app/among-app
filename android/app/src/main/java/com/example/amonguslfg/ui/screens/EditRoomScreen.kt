@@ -1,4 +1,3 @@
-
 package com.example.amonguslfg.ui.screens
 
 import androidx.compose.foundation.layout.*
@@ -12,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.amonguslfg.viewmodels.EditRoomViewModel
 import kotlin.math.roundToInt
@@ -22,14 +22,14 @@ fun EditRoomScreen(
     navController: NavController,
     viewModel: EditRoomViewModel = hiltViewModel()
 ) {
-    val roomCode by viewModel.roomCode.collectAsState()
-    val currentPlayers by viewModel.currentPlayers.collectAsState()
-    val maxPlayers by viewModel.maxPlayers.collectAsState()
-    val regulation by viewModel.regulation.collectAsState()
-    val mod by viewModel.mod.collectAsState()
-    val server by viewModel.server.collectAsState()
-    val description by viewModel.description.collectAsState()
-    val updateSuccess by viewModel.updateSuccess.collectAsState()
+    val roomCode by viewModel.roomCode.collectAsStateWithLifecycle()
+    val currentPlayers by viewModel.currentPlayers.collectAsStateWithLifecycle()
+    val maxPlayers by viewModel.maxPlayers.collectAsStateWithLifecycle()
+    val regulation by viewModel.regulation.collectAsStateWithLifecycle()
+    val mod by viewModel.mod.collectAsStateWithLifecycle()
+    val server by viewModel.server.collectAsStateWithLifecycle()
+    val description by viewModel.description.collectAsStateWithLifecycle()
+    val updateSuccess by viewModel.updateSuccess.collectAsStateWithLifecycle()
 
     val regulations = listOf("闇鍋", "光鍋", "ガチ村", "かくれんぼ", "近アモ", "撮影", "テストプレイ", "特殊プレイ", "そのほか")
     val mods = listOf("SNR", "Nos", "Exr", "バニラ", "その他")
@@ -59,7 +59,6 @@ fun EditRoomScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Room code is not editable
             OutlinedTextField(value = roomCode, onValueChange = {}, label = { Text("ルームコード (編集不可)") }, modifier = Modifier.fillMaxWidth(), readOnly = true)
             Spacer(modifier = Modifier.height(16.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {

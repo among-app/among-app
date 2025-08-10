@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.google.services)
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -66,11 +66,24 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose) // Hilt Navigation Compose を追加
+
+    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+
+    // DataStore
     implementation(libs.datastore.preferences)
+
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
+
+    // Material Icons を追加
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 }

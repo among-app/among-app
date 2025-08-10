@@ -1,11 +1,14 @@
-
 package com.example.amonguslfg.di
 
+import android.content.Context
 import com.example.amonguslfg.api.ApiService
+import com.example.amonguslfg.data.repository.AnnouncementRepository
 import com.example.amonguslfg.data.repository.RoomRepository
+import com.example.amonguslfg.data.repository.UserDataRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,15 +22,11 @@ object AppModule {
     @Singleton
     fun provideApiService(): ApiService {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8000/") // For Android Emulator
+            .baseUrl("https://relieved-roselin-plaplapla-7cc9aab5.koyeb.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
     }
-
-    import android.content.Context
-import com.example.amonguslfg.data.repository.UserDataRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 
     @Provides
     @Singleton
@@ -38,17 +37,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
         return UserDataRepository(context, apiService)
     }
 
-    import com.example.amonguslfg.data.repository.AnnouncementRepository
+    @Provides
+    @Singleton
+    fun provideRoomRepository(apiService: ApiService): RoomRepository {
+        return RoomRepository(apiService)
+    }
 
     @Provides
     @Singleton
     fun provideAnnouncementRepository(apiService: ApiService): AnnouncementRepository {
         return AnnouncementRepository(apiService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideRoomRepository(apiService: ApiService): RoomRepository {
-        return RoomRepository(apiService)
     }
 }
