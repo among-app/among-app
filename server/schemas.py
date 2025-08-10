@@ -18,7 +18,7 @@ class User(UserBase):
     is_verified: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserUpdate(BaseModel):
     is_admin: Optional[bool] = None
@@ -54,7 +54,7 @@ class Room(RoomBase):
     owner: User
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # Announcement Schemas
 class AnnouncementBase(BaseModel):
@@ -69,4 +69,4 @@ class Announcement(AnnouncementBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
