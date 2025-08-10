@@ -1,10 +1,13 @@
-
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional, List
 
+# Pydantic config to use camelCase for JSON responses
+class CamelCaseModel(BaseModel):
+    model_config = ConfigDict(alias_generator=lambda string: ''.join(word.capitalize() if i != 0 else word for i, word in enumerate(string.split('_'))), from_attributes=True)
+
 # User Schemas
-class UserBase(BaseModel):
+class UserBase(CamelCaseModel):
     username: str
 
 class UserCreate(UserBase):
@@ -17,29 +20,26 @@ class User(UserBase):
     is_banned: bool
     is_verified: bool
 
-    class Config:
-        from_attributes = True
-
-class UserUpdate(BaseModel):
+class UserUpdate(BaseModel): # No need for camelCase on update
     is_admin: Optional[bool] = None
     is_banned: Optional[bool] = None
     is_verified: Optional[bool] = None
 
 # Room Schemas
-class RoomBase(BaseModel):
+class RoomBase(CamelCaseModel):
     room_code: str
     current_players: int
     max_players: int
-    regulation: str # Keep this as string for response
+    regulation: str
     mod_name: str
     server_name: str
     description: Optional[str] = None
 
 class RoomCreate(RoomBase):
-    regulation: List[str] # Expect a list of strings on creation
+    regulation: List[str]
     is_special: Optional[bool] = False
 
-class RoomUpdate(BaseModel):
+class RoomUpdate(BaseModel): # No need for camelCase on update
     current_players: Optional[int] = None
     max_players: Optional[int] = None
     regulation: Optional[str] = None
@@ -54,11 +54,8 @@ class Room(RoomBase):
     is_special: bool
     owner: User
 
-    class Config:
-        from_attributes = True
-
 # Announcement Schemas
-class AnnouncementBase(BaseModel):
+class AnnouncementBase(CamelCaseModel):
     title: str
     content: str
 
@@ -68,6 +65,3 @@ class AnnouncementCreate(AnnouncementBase):
 class Announcement(AnnouncementBase):
     id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
