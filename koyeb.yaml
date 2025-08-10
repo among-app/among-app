@@ -3,9 +3,10 @@ name: amongus-lfg-app
 services:
   - name: api-server
     git:
-      repo: YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME # 修正してください
+      repo: among-app/among-app.git # あなたのリポジトリ名に修正してください
       branch: main
-    run_command: uvicorn server.main:app --host 0.0.0.0 --port 8000
+    docker:
+      dockerfile: Dockerfile
     instance_type: free
     ports:
       - port: 8000
