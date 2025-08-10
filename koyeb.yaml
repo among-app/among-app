@@ -1,0 +1,25 @@
+name: amongus-lfg-app
+
+services:
+  - name: api-server
+    git:
+      repo: YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME # 修正してください
+      branch: main
+    docker:
+      command: uvicorn server.main:app --host 0.0.0.0 --port 8000
+    instance_type: free
+    ports:
+      - port: 8000
+        protocol: http
+    routes:
+      - path: /
+        port: 8000
+    env:
+      - key: DATABASE_URL
+        scope: secret
+        secret: amongus-lfg-db-url # この名前のSecretをKoyebで作成します
+
+databases:
+  - name: amongus-lfg-db
+    engine: postgres
+    instance_type: free

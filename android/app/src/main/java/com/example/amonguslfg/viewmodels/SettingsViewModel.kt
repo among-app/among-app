@@ -1,0 +1,37 @@
+
+package com.example.amonguslfg.viewmodels
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.amonguslfg.data.repository.UserDataRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val userDataRepository: UserDataRepository
+) : ViewModel() {
+
+    private val _userName = MutableStateFlow("")
+    val userName = _userName.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _userName.value = userDataRepository.userNameFlow.first()
+        }
+    }
+
+    fun onUserNameChange(newName: String) {
+        _userName.value = newName
+    }
+
+    fun saveUserName() {
+        viewModelScope.launch {
+            userDataRepository.saveUserName(_userName.value)
+        }
+    }
+}
