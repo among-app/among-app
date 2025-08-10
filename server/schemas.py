@@ -2,31 +2,40 @@ from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional, List
 
-# Pydantic config to use camelCase for JSON responses
-class CamelCaseModel(BaseModel):
-    model_config = ConfigDict(alias_generator=lambda string: ''.join(word.capitalize() if i != 0 else word for i, word in enumerate(string.split('_'))), from_attributes=True)
+# Base Pydantic model for request bodies (uses default snake_case)
+class RequestBaseModel(BaseModel):
+    pass
 
-# User Schemas
-class UserBase(CamelCaseModel):
+# Base Pydantic model for responses (generates camelCase aliases)
+class ResponseBaseModel(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=lambda string: ''.join(word.capitalize() if i != 0 else word for i, word in enumerate(string.split('_'))),
+        from_attributes=True,
+        populate_by_name=True # Allows both alias and field name population
+    )
+
+# --- User Schemas ---
+class UserBase(ResponseBaseModel):
     username: str
 
-class UserCreate(UserBase):
+class UserCreate(RequestBaseModel): # For request body
     device_id: str
+    username: str
 
-class User(UserBase):
+class User(UserBase): # For response
     id: int
     device_id: str
     is_admin: bool
     is_banned: bool
     is_verified: bool
 
-class UserUpdate(BaseModel): # No need for camelCase on update
+class UserUpdate(RequestBaseModel): # For request body
     is_admin: Optional[bool] = None
     is_banned: Optional[bool] = None
     is_verified: Optional[bool] = None
 
-# Room Schemas
-class RoomBase(CamelCaseModel):
+# --- Room Schemas ---
+class RoomBase(ResponseBaseModel):
     room_code: str
     current_players: int
     max_players: int
@@ -35,11 +44,17 @@ class RoomBase(CamelCaseModel):
     server_name: str
     description: Optional[str] = None
 
-class RoomCreate(RoomBase):
+class RoomCreate(RequestBaseModel): # For request body
+    room_code: str
+    current_players: int
+    max_players: int
     regulation: List[str]
+    mod_name: str
+    server_name: str
+    description: Optional[str] = None
     is_special: Optional[bool] = False
 
-class RoomUpdate(BaseModel): # No need for camelCase on update
+class RoomUpdate(RequestBaseModel): # For request body
     current_players: Optional[int] = None
     max_players: Optional[int] = None
     regulation: Optional[str] = None
@@ -48,20 +63,21 @@ class RoomUpdate(BaseModel): # No need for camelCase on update
     description: Optional[str] = None
     is_special: Optional[bool] = None
 
-class Room(RoomBase):
+class Room(RoomBase): # For response
     id: int
     created_at: datetime
     is_special: bool
     owner: User
 
-# Announcement Schemas
-class AnnouncementBase(CamelCaseModel):
+# --- Announcement Schemas ---
+class AnnouncementBase(ResponseBaseModel):
     title: str
     content: str
 
-class AnnouncementCreate(AnnouncementBase):
-    pass
+class AnnouncementCreate(RequestBaseModel): # For request body
+    title: str
+    content: str
 
-class Announcement(AnnouncementBase):
+class Announcement(AnnouncementBase): # For response
     id: int
     created_at: datetime
