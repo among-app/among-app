@@ -5,8 +5,7 @@ services:
     git:
       repo: YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME # 修正してください
       branch: main
-    docker:
-      command: uvicorn server.main:app --host 0.0.0.0 --port 8000
+    run_command: uvicorn server.main:app --host 0.0.0.0 --port 8000
     instance_type: free
     ports:
       - port: 8000
