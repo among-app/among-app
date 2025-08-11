@@ -4,6 +4,7 @@ import com.example.amonguslfg.api.ApiService
 import com.example.amonguslfg.model.Room
 import com.example.amonguslfg.model.RoomCreate
 import com.example.amonguslfg.model.RoomUpdate
+import com.example.amonguslfg.model.RoomStatusUpdate
 import javax.inject.Inject
 
 class RoomRepository @Inject constructor(private val apiService: ApiService) {
@@ -19,8 +20,6 @@ class RoomRepository @Inject constructor(private val apiService: ApiService) {
     suspend fun createRoom(deviceId: String, room: RoomCreate): Room {
         return apiService.createRoom(deviceId, room)
     }
-
-    import com.example.amonguslfg.model.RoomStatusUpdate
 
     suspend fun updateRoom(deviceId: String, roomId: Int, room: RoomUpdate): Room {
         return apiService.updateRoom(deviceId, roomId, room)

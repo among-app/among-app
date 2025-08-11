@@ -18,6 +18,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.example.amonguslfg.model.FcmTokenUpdate
+import com.example.amonguslfg.model.NotificationFilterCreate
+import com.example.amonguslfg.model.NotificationSettings
+import com.example.amonguslfg.model.NotificationSettingsUpdate
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -71,11 +75,6 @@ class UserDataRepository @Inject constructor(
         val userUpdate = UserUpdate(username = username)
         _currentUser.value = apiService.updateMyUser(deviceId, userUpdate)
     }
-
-    import com.example.amonguslfg.model.FcmTokenUpdate
-import com.example.amonguslfg.model.NotificationFilterCreate
-import com.example.amonguslfg.model.NotificationSettings
-import com.example.amonguslfg.model.NotificationSettingsUpdate
 
     suspend fun updateFcmToken(token: String) {
         val deviceId = deviceIdFlow.first()

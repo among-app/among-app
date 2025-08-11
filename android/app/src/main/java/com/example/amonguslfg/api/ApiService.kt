@@ -1,6 +1,9 @@
 package com.example.amonguslfg.api
 
 import com.example.amonguslfg.model.*
+import com.example.amonguslfg.model.FcmTokenUpdate
+import com.example.amonguslfg.model.NotificationSettings
+import com.example.amonguslfg.model.NotificationSettingsUpdate
 import retrofit2.http.*
 
 interface ApiService {
@@ -16,10 +19,6 @@ interface ApiService {
 
     @PUT("users/{id}")
     suspend fun updateUser(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body userUpdate: UserUpdate): User
-
-    import com.example.amonguslfg.model.FcmTokenUpdate
-import com.example.amonguslfg.model.NotificationSettings
-import com.example.amonguslfg.model.NotificationSettingsUpdate
 
     @PUT("/users/me/fcm-token")
     suspend fun updateFcmToken(@Header("x-device-id") deviceId: String, @Body fcmTokenUpdate: FcmTokenUpdate): User

@@ -13,7 +13,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def create_user(db: Session, user: schemas.UserCreate):
     is_admin = False
-    if user.deviceId == "ADMIN_DEVICE_ID":
+    if user.deviceId == "bc198616-6536-4695-b009-50502a3c48d7":
         is_admin = True
     db_user = models.User(deviceId=user.deviceId, username=user.username, isAdmin=is_admin)
     db.add(db_user)
