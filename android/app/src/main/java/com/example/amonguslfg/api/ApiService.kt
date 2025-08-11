@@ -17,8 +17,16 @@ interface ApiService {
     @PUT("users/{id}")
     suspend fun updateUser(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body userUpdate: UserUpdate): User
 
-    @PUT("users/me/fcm-token")
+    import com.example.amonguslfg.model.FcmTokenUpdate
+import com.example.amonguslfg.model.NotificationSettings
+import com.example.amonguslfg.model.NotificationSettingsUpdate
+
+    @PUT("/users/me/fcm-token")
     suspend fun updateFcmToken(@Header("x-device-id") deviceId: String, @Body fcmTokenUpdate: FcmTokenUpdate): User
+
+    @GET("/users/me/notification-settings")
+    suspend fun getNotificationSettings(@Header("x-device-id") deviceId: String): NotificationSettings
+
 
     @PUT("users/me/notification-settings")
     suspend fun updateNotificationSettings(@Header("x-device-id") deviceId: String, @Body settingsUpdate: NotificationSettingsUpdate): User

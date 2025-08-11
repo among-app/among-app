@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -34,9 +35,8 @@ fun RoomListScreen(
     listViewModel: RoomListViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val rooms by listViewModel.displayRooms.collectAsStateWithLifecycle() // Use the new sorted list
+    val rooms by listViewModel.displayRooms.collectAsStateWithLifecycle()
     val filters by listViewModel.sortFilters.collectAsStateWithLifecycle()
-    val currentUserName by listViewModel.userName.collectAsStateWithLifecycle()
     val currentUser by mainViewModel.currentUser.collectAsStateWithLifecycle()
     var showFilterDialog by remember { mutableStateOf(false) }
 
@@ -69,7 +69,7 @@ fun RoomListScreen(
             TopAppBar(
                 title = { Text("募集一覧") },
                 actions = {
-                    if (currentUser?.isAdmin == true) { // Corrected: is_admin to isAdmin
+                    if (currentUser?.isAdmin == true) {
                         IconButton(onClick = onAdminClick) {
                             Icon(Icons.Default.AdminPanelSettings, contentDescription = "管理者メニュー")
                         }
@@ -108,10 +108,10 @@ fun RoomListScreen(
         }
     ) { innerPadding ->
         LazyColumn(modifier = Modifier.padding(innerPadding).padding(horizontal = 8.dp)) {
-            items(rooms) { room ->
+            items(rooms, key = { it.id }) { room ->
                 RoomItem(
                     room = room,
-                    currentUserName = currentUserName,
+                    currentUserName = currentUser?.username ?: "",
                     isAdmin = currentUser?.isAdmin == true,
                     onEditClick = onEditClick,
                     onDeleteClick = { listViewModel.deleteRoom(room.id) },
@@ -158,7 +158,7 @@ fun FilterDialog(
                             }
                             .padding(vertical = 4.dp)
                     ) {
-                        Checkbox(checked = selectedRegulations.contains(option), onCheckedChange = null)
+                        Checkbox(checked = selectedRegulations.contains(option), onCheckedChange = null, modifier = Modifier.scale(1.2f))
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(option)
                     }
@@ -179,7 +179,7 @@ fun FilterDialog(
                             }
                             .padding(vertical = 4.dp)
                     ) {
-                        Checkbox(checked = selectedMods.contains(option), onCheckedChange = null)
+                        Checkbox(checked = selectedMods.contains(option), onCheckedChange = null, modifier = Modifier.scale(1.2f))
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(option)
                     }

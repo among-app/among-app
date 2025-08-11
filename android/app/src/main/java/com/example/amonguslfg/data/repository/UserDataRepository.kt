@@ -45,16 +45,15 @@ class UserDataRepository @Inject constructor(
         context.dataStore.edit { settings -> settings[PreferencesKeys.USER_NAME] = name }
     }
 
-    suspend fun registerAndGetUser() {
+    suspend fun registerAndGetUser(): User {
         var deviceId = deviceIdFlow.first()
         if (deviceId.isBlank()) {
             deviceId = java.util.UUID.randomUUID().toString()
             context.dataStore.edit { settings -> settings[PreferencesKeys.DEVICE_ID] = deviceId }
         }
-        Log.d("UserDataRepository", "Your Device ID is: $deviceId")
         val username = userNameFlow.first().ifBlank { "Anonymous" }
         val userCreate = UserCreate(deviceId = deviceId, username = username)
-        _currentUser.value = apiService.register(userCreate)
+        return apiService.register(userCreate)
     }
 
     suspend fun getUsers(): List<User> {
@@ -73,11 +72,21 @@ class UserDataRepository @Inject constructor(
         _currentUser.value = apiService.updateMyUser(deviceId, userUpdate)
     }
 
+    import com.example.amonguslfg.model.FcmTokenUpdate
+import com.example.amonguslfg.model.NotificationFilterCreate
+import com.example.amonguslfg.model.NotificationSettings
+import com.example.amonguslfg.model.NotificationSettingsUpdate
+
     suspend fun updateFcmToken(token: String) {
         val deviceId = deviceIdFlow.first()
         if (deviceId.isNotBlank()) {
             apiService.updateFcmToken(deviceId, FcmTokenUpdate(fcmToken = token))
         }
+    }
+
+    suspend fun getNotificationSettings(): NotificationSettings {
+        val deviceId = deviceIdFlow.first()
+        return apiService.getNotificationSettings(deviceId)
     }
 
     suspend fun updateNotificationSettings(isEnabled: Boolean, filters: SortFilters) {

@@ -7,7 +7,6 @@ import com.example.amonguslfg.data.repository.UserDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,9 +25,23 @@ class SettingsViewModel @Inject constructor(
     val notificationFilters = _notificationFilters.asStateFlow()
 
     init {
+        loadSettings()
+    }
+
+    private fun loadSettings() {
         viewModelScope.launch {
-            _userName.value = userDataRepository.userNameFlow.first()
-            // TODO: Fetch and apply current user settings
+            try {
+                _userName.value = userDataRepository.userNameFlow.first()
+                val settings = userDataRepository.getNotificationSettings()
+                _notificationsEnabled.value = settings.notificationsEnabled
+                
+                val regulations = settings.filters.filter { it.filterType == "regulation" }.map { it.filterValue }.toSet()
+                val mods = settings.filters.filter { it.filterType == "mod" }.map { it.filterValue }.toSet()
+                _notificationFilters.value = SortFilters(regulations = regulations, mods = mods)
+
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Failed to load settings", e)
+            }
         }
     }
 

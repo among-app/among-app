@@ -14,6 +14,13 @@ services:
     routes:
       - path: /
         port: 8000
+    env:
+      - key: DATABASE_URL
+        scope: secret
+        secret: amongus-lfg-db-url
+      - key: FIREBASE_SERVICE_ACCOUNT
+        scope: secret
+        secret: FIREBASE_SERVICE_ACCOUNT
 
 databases:
   - name: amongus-lfg-db

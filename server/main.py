@@ -74,6 +74,17 @@ def update_user_permissions(user_id: int, user_update: schemas.UserUpdate, admin
 def update_fcm_token(token_update: schemas.FcmTokenUpdate, current_user: Annotated[models.User, Depends(get_current_user)], db: Session = Depends(get_db)):
     return crud.update_fcm_token(db, user_id=current_user.id, token=token_update.fcmToken)
 
+@app.get("/users/me/notification-settings", response_model=schemas.NotificationSettings)
+def get_notification_settings(
+    current_user: Annotated[models.User, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    filters = crud.get_notification_filters(db, user_id=current_user.id)
+    return schemas.NotificationSettings(
+        notificationsEnabled=current_user.notificationsEnabled,
+        filters=filters
+    )
+
 @app.put("/users/me/notification-settings", response_model=schemas.User)
 def update_notification_settings(settings_update: schemas.NotificationSettingsUpdate, current_user: Annotated[models.User, Depends(get_current_user)], db: Session = Depends(get_db)):
     return crud.update_notification_settings(db, user_id=current_user.id, settings=settings_update)

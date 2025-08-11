@@ -39,6 +39,10 @@ def update_fcm_token(db: Session, user_id: int, token: str):
         db.refresh(db_user)
     return db_user
 
+# --- Notification Settings CRUD --- #
+def get_notification_filters(db: Session, user_id: int):
+    return db.query(models.NotificationFilter).filter(models.NotificationFilter.userId == user_id).all()
+
 def update_notification_settings(db: Session, user_id: int, settings: schemas.NotificationSettingsUpdate):
     db_user = get_user(db, user_id=user_id)
     if not db_user:

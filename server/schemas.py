@@ -2,9 +2,9 @@ from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional, List
 
-orm_config = ConfigDict(from_attributes=True)
+orm_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
-# --- All schemas now use camelCase exclusively ---
+# --- Schemas for Responses (Server -> Client) ---
 
 class User(BaseModel):
     model_config = orm_config
@@ -45,8 +45,11 @@ class NotificationFilter(BaseModel):
     filterValue: str
 
 class NotificationSettings(BaseModel):
+    model_config = orm_config
     notificationsEnabled: bool
     filters: List[NotificationFilter]
+
+# --- Schemas for Requests (Client -> Server) ---
 
 class UserCreate(BaseModel):
     deviceId: str

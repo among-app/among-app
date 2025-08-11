@@ -58,16 +58,14 @@ fun RoomItem(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                if (isAdmin || room.owner.username == currentUserName && currentUserName.isNotBlank()) {
-                    Row {
-                        if (room.status == "recruiting") {
-                            Button(onClick = { onStatusChange(room.id, "playing") }) {
-                                Text("プレイ中")
-                            }
-                        } else {
-                            Button(onClick = { onStatusChange(room.id, "recruiting") }) {
-                                Text("募集中")
-                            }
+                if (isAdmin || (room.owner.username == currentUserName && currentUserName.isNotBlank())) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (room.owner.username == currentUserName) { // Status change is only for the owner
+                             val isPlaying = room.status == "playing"
+                             Button(onClick = { onStatusChange(room.id, if (isPlaying) "recruiting" else "playing") }) {
+                                 Text(if (isPlaying) "募集中" else "プレイ中")
+                             }
+                             Spacer(modifier = Modifier.width(8.dp))
                         }
                         IconButton(onClick = { onEditClick(room.id) }) {
                             Icon(Icons.Default.Edit, contentDescription = "編集")
@@ -85,8 +83,10 @@ fun RoomItem(
             Text(text = "MOD: ${room.modName}", style = MaterialTheme.typography.bodyMedium)
             Text(text = "サーバー: ${room.serverName}", style = MaterialTheme.typography.bodyMedium)
             room.description?.let {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)
+                if(it.isNotBlank()){
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)
+                }
             }
         }
     }
