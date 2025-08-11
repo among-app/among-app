@@ -12,24 +12,28 @@ import com.example.amonguslfg.model.User
 import com.example.amonguslfg.model.UserCreate
 import com.example.amonguslfg.model.UserUpdate
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+@Singleton
 class UserDataRepository @Inject constructor(
     private val context: Context,
     private val apiService: ApiService
 ) {
 
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+
     private object PreferencesKeys {
         val USER_NAME = stringPreferencesKey("user_name")
         val DEVICE_ID = stringPreferencesKey("device_id")
-    }
-
-    init {
-        Log.d("UserDataRepository", "Repository initialized")
     }
 
     val userNameFlow: Flow<String> = context.dataStore.data
@@ -42,7 +46,7 @@ class UserDataRepository @Inject constructor(
         context.dataStore.edit { settings -> settings[PreferencesKeys.USER_NAME] = name }
     }
 
-    suspend fun registerAndGetUser(): User {
+    suspend fun registerAndGetUser() {
         var deviceId = deviceIdFlow.first()
         if (deviceId.isBlank()) {
             deviceId = java.util.UUID.randomUUID().toString()
@@ -51,7 +55,7 @@ class UserDataRepository @Inject constructor(
         Log.d("UserDataRepository", "Your Device ID is: $deviceId")
         val username = userNameFlow.first().ifBlank { "Anonymous" }
         val userCreate = UserCreate(deviceId = deviceId, username = username)
-        return apiService.register(userCreate)
+        _currentUser.value = apiService.register(userCreate)
     }
 
     suspend fun getUsers(): List<User> {
@@ -64,9 +68,9 @@ class UserDataRepository @Inject constructor(
         return apiService.updateUser(deviceId, userId, userUpdate)
     }
 
-    suspend fun updateMyUsername(username: String): User {
+    suspend fun updateMyUsername(username: String) {
         val deviceId = deviceIdFlow.first()
         val userUpdate = UserUpdate(username = username)
-        return apiService.updateMyUser(deviceId, userUpdate)
+        _currentUser.value = apiService.updateMyUser(deviceId, userUpdate)
     }
 }

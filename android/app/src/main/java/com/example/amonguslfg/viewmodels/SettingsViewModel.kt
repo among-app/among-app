@@ -1,6 +1,6 @@
-
 package com.example.amonguslfg.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.amonguslfg.data.repository.UserDataRepository
@@ -32,11 +32,12 @@ class SettingsViewModel @Inject constructor(
     fun saveUserName() {
         viewModelScope.launch {
             try {
+                // First, save to local DataStore
                 userDataRepository.saveUserName(_userName.value)
+                // Then, update the name on the server and refresh the user state
                 userDataRepository.updateMyUsername(_userName.value)
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Failed to save username", e)
-                // Optionally, show an error message to the user
             }
         }
     }

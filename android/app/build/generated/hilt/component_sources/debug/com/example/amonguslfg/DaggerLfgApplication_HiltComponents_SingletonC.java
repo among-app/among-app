@@ -408,50 +408,50 @@ public final class DaggerLfgApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel = "com.example.amonguslfg.viewmodels.AnnouncementManagerViewModel";
+      static String com_example_amonguslfg_viewmodels_CreateRoomViewModel = "com.example.amonguslfg.viewmodels.CreateRoomViewModel";
 
       static String com_example_amonguslfg_viewmodels_EditRoomViewModel = "com.example.amonguslfg.viewmodels.EditRoomViewModel";
 
-      static String com_example_amonguslfg_viewmodels_RoomDetailViewModel = "com.example.amonguslfg.viewmodels.RoomDetailViewModel";
-
-      static String com_example_amonguslfg_viewmodels_CreateRoomViewModel = "com.example.amonguslfg.viewmodels.CreateRoomViewModel";
-
-      static String com_example_amonguslfg_viewmodels_RoomListViewModel = "com.example.amonguslfg.viewmodels.RoomListViewModel";
-
-      static String com_example_amonguslfg_viewmodels_UserManagerViewModel = "com.example.amonguslfg.viewmodels.UserManagerViewModel";
-
-      static String com_example_amonguslfg_viewmodels_AnnouncementsViewModel = "com.example.amonguslfg.viewmodels.AnnouncementsViewModel";
+      static String com_example_amonguslfg_viewmodels_MainViewModel = "com.example.amonguslfg.viewmodels.MainViewModel";
 
       static String com_example_amonguslfg_viewmodels_SettingsViewModel = "com.example.amonguslfg.viewmodels.SettingsViewModel";
 
-      static String com_example_amonguslfg_viewmodels_MainViewModel = "com.example.amonguslfg.viewmodels.MainViewModel";
+      static String com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel = "com.example.amonguslfg.viewmodels.AnnouncementManagerViewModel";
 
-      @KeepFieldType
-      AnnouncementManagerViewModel com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel2;
+      static String com_example_amonguslfg_viewmodels_UserManagerViewModel = "com.example.amonguslfg.viewmodels.UserManagerViewModel";
 
-      @KeepFieldType
-      EditRoomViewModel com_example_amonguslfg_viewmodels_EditRoomViewModel2;
+      static String com_example_amonguslfg_viewmodels_RoomListViewModel = "com.example.amonguslfg.viewmodels.RoomListViewModel";
 
-      @KeepFieldType
-      RoomDetailViewModel com_example_amonguslfg_viewmodels_RoomDetailViewModel2;
+      static String com_example_amonguslfg_viewmodels_RoomDetailViewModel = "com.example.amonguslfg.viewmodels.RoomDetailViewModel";
+
+      static String com_example_amonguslfg_viewmodels_AnnouncementsViewModel = "com.example.amonguslfg.viewmodels.AnnouncementsViewModel";
 
       @KeepFieldType
       CreateRoomViewModel com_example_amonguslfg_viewmodels_CreateRoomViewModel2;
 
       @KeepFieldType
-      RoomListViewModel com_example_amonguslfg_viewmodels_RoomListViewModel2;
+      EditRoomViewModel com_example_amonguslfg_viewmodels_EditRoomViewModel2;
 
       @KeepFieldType
-      UserManagerViewModel com_example_amonguslfg_viewmodels_UserManagerViewModel2;
-
-      @KeepFieldType
-      AnnouncementsViewModel com_example_amonguslfg_viewmodels_AnnouncementsViewModel2;
+      MainViewModel com_example_amonguslfg_viewmodels_MainViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_example_amonguslfg_viewmodels_SettingsViewModel2;
 
       @KeepFieldType
-      MainViewModel com_example_amonguslfg_viewmodels_MainViewModel2;
+      AnnouncementManagerViewModel com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel2;
+
+      @KeepFieldType
+      UserManagerViewModel com_example_amonguslfg_viewmodels_UserManagerViewModel2;
+
+      @KeepFieldType
+      RoomListViewModel com_example_amonguslfg_viewmodels_RoomListViewModel2;
+
+      @KeepFieldType
+      RoomDetailViewModel com_example_amonguslfg_viewmodels_RoomDetailViewModel2;
+
+      @KeepFieldType
+      AnnouncementsViewModel com_example_amonguslfg_viewmodels_AnnouncementsViewModel2;
     }
   }
 
@@ -518,32 +518,29 @@ public final class DaggerLfgApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_amonguslfg_viewmodels_MainViewModel = "com.example.amonguslfg.viewmodels.MainViewModel";
-
-      static String com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel = "com.example.amonguslfg.viewmodels.AnnouncementManagerViewModel";
-
       static String com_example_amonguslfg_viewmodels_AnnouncementsViewModel = "com.example.amonguslfg.viewmodels.AnnouncementsViewModel";
+
+      static String com_example_amonguslfg_viewmodels_EditRoomViewModel = "com.example.amonguslfg.viewmodels.EditRoomViewModel";
 
       static String com_example_amonguslfg_viewmodels_RoomListViewModel = "com.example.amonguslfg.viewmodels.RoomListViewModel";
 
       static String com_example_amonguslfg_viewmodels_CreateRoomViewModel = "com.example.amonguslfg.viewmodels.CreateRoomViewModel";
 
+      static String com_example_amonguslfg_viewmodels_UserManagerViewModel = "com.example.amonguslfg.viewmodels.UserManagerViewModel";
+
       static String com_example_amonguslfg_viewmodels_RoomDetailViewModel = "com.example.amonguslfg.viewmodels.RoomDetailViewModel";
+
+      static String com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel = "com.example.amonguslfg.viewmodels.AnnouncementManagerViewModel";
+
+      static String com_example_amonguslfg_viewmodels_MainViewModel = "com.example.amonguslfg.viewmodels.MainViewModel";
 
       static String com_example_amonguslfg_viewmodels_SettingsViewModel = "com.example.amonguslfg.viewmodels.SettingsViewModel";
 
-      static String com_example_amonguslfg_viewmodels_EditRoomViewModel = "com.example.amonguslfg.viewmodels.EditRoomViewModel";
-
-      static String com_example_amonguslfg_viewmodels_UserManagerViewModel = "com.example.amonguslfg.viewmodels.UserManagerViewModel";
-
-      @KeepFieldType
-      MainViewModel com_example_amonguslfg_viewmodels_MainViewModel2;
-
-      @KeepFieldType
-      AnnouncementManagerViewModel com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel2;
-
       @KeepFieldType
       AnnouncementsViewModel com_example_amonguslfg_viewmodels_AnnouncementsViewModel2;
+
+      @KeepFieldType
+      EditRoomViewModel com_example_amonguslfg_viewmodels_EditRoomViewModel2;
 
       @KeepFieldType
       RoomListViewModel com_example_amonguslfg_viewmodels_RoomListViewModel2;
@@ -552,16 +549,19 @@ public final class DaggerLfgApplication_HiltComponents_SingletonC {
       CreateRoomViewModel com_example_amonguslfg_viewmodels_CreateRoomViewModel2;
 
       @KeepFieldType
+      UserManagerViewModel com_example_amonguslfg_viewmodels_UserManagerViewModel2;
+
+      @KeepFieldType
       RoomDetailViewModel com_example_amonguslfg_viewmodels_RoomDetailViewModel2;
 
       @KeepFieldType
+      AnnouncementManagerViewModel com_example_amonguslfg_viewmodels_AnnouncementManagerViewModel2;
+
+      @KeepFieldType
+      MainViewModel com_example_amonguslfg_viewmodels_MainViewModel2;
+
+      @KeepFieldType
       SettingsViewModel com_example_amonguslfg_viewmodels_SettingsViewModel2;
-
-      @KeepFieldType
-      EditRoomViewModel com_example_amonguslfg_viewmodels_EditRoomViewModel2;
-
-      @KeepFieldType
-      UserManagerViewModel com_example_amonguslfg_viewmodels_UserManagerViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
