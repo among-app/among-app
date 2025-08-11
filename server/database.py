@@ -1,27 +1,16 @@
-
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Check for the Koyeb DATABASE_URL environment variable first
-DATABASE_URL = os.getenv("DATABASE_URL")
+# !!!セキュリティ上の警告!!! データベースの接続情報をコードに直接書き込むことは非常に危険です。
+# このコードが公開されると、第三者がデータベースにアクセスできてしまいます。
+SQLALCHEMY_DATABASE_URL = "postgres://koyeb-adm:npg_MQgIqjY59PLH@ep-delicate-queen-a4u1iney.us-east-1.pg.koyeb.app/and-among"
 
-# If DATABASE_URL is not set, fall back to local SQLite DB
-if DATABASE_URL is None:
-    print("DATABASE_URL not found, falling back to SQLite.")
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    db_path = os.path.join(basedir, "among_us.db")
-    DATABASE_URL = f"sqlite:///{db_path}"
-    engine = create_engine(
-        DATABASE_URL, connect_args={"check_same_thread": False}
-    )
-else:
-    print("DATABASE_URL found, connecting to PostgreSQL.")
-    # SQLAlchemy's handling of Heroku-style DATABASE_URLs
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-    engine = create_engine(DATABASE_URL)
+# SQLAlchemyがPostgreSQLを正しく認識できるようにURLを調整
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
