@@ -23,3 +23,4 @@ class AnnouncementRepository @Inject constructor(private val apiService: ApiServ
     suspend fun deleteAnnouncement(deviceId: String, id: Int) {
         apiService.deleteAnnouncement(deviceId, id)
     }
+}

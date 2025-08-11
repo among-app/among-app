@@ -66,20 +66,21 @@ fun RoomItem(
                     text = "部屋主: ${room.owner.username}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = Color.Black
                 )
                 RoomStatusText(room.status)
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "ルームコード: ${room.roomCode}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "人数: ${room.currentPlayers} / ${room.maxPlayers}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "レギュレーション: ${room.regulation}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "MOD: ${room.modName}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "サーバー: ${room.serverName}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "ルームコード: ${room.roomCode}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+            Text(text = "人数: ${room.currentPlayers} / ${room.maxPlayers}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+            Text(text = "レギュレーション: ${room.regulation}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+            Text(text = "MOD: ${room.modName}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+            Text(text = "サーバー: ${room.serverName}", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
             room.description?.let {
                 if(it.isNotBlank()){
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)
+                    Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall, color = Color.Black)
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))

@@ -59,3 +59,5 @@ interface ApiService {
 
     @DELETE("announcements/{id}")
     suspend fun deleteAnnouncement(@Header("x-device-id") deviceId: String, @Path("id") id: Int)
+
+}

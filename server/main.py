@@ -114,27 +114,7 @@ def create_room(room: schemas.RoomCreate, current_user: Annotated[models.User, D
                 data={"roomId": str(new_room.id)},
                 tokens=tokens,
             )
-            messaging.send_multicast(message)
-            print(f"Sent notification to {len(tokens)} users.")
-    except Exception as e:
-        print(f"Error sending notification: {e}")
-
-    return new_room
-
-    try:
-        users_to_notify = crud.get_users_for_notification(db, new_room)
-        tokens = [user.fcmToken for user in users_to_notify if user.fcmToken and user.id != current_user.id]
-        if tokens:
-            notification_body = f"{new_room.regulation} @{new_room.currentPlayers}/{new_room.maxPlayers}"
-            message = messaging.MulticastMessage(
-                notification=messaging.Notification(
-                    title=f"{new_room.modName} の募集が開始されました",
-                    body=notification_body
-                ),
-                data={"roomId": str(new_room.id)},
-                tokens=tokens,
-            )
-            messaging.send_multicast(message)
+            messaging.send_each_for_multicast(message)
             print(f"Sent notification to {len(tokens)} users.")
     except Exception as e:
         print(f"Error sending notification: {e}")

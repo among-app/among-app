@@ -1,5 +1,6 @@
 package com.example.amonguslfg.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -23,6 +25,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.amonguslfg.viewmodels.MainViewModel
 import com.example.amonguslfg.viewmodels.RoomListViewModel
 import com.example.amonguslfg.viewmodels.SortFilters
+
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,17 +44,29 @@ fun RoomListScreen(
     val rooms by listViewModel.displayRooms.collectAsStateWithLifecycle()
     val filters by listViewModel.sortFilters.collectAsStateWithLifecycle()
     val currentUser by mainViewModel.currentUser.collectAsStateWithLifecycle()
+    val isRefreshing by listViewModel.isRefreshing.collectAsStateWithLifecycle()
     var showFilterDialog by remember { mutableStateOf(false) }
 
-    if (showFilterDialog) {
-        FilterDialog(
-            currentFilters = filters,
-            onDismiss = { showFilterDialog = false },
-            onApply = { newFilters ->
-                listViewModel.updateSortFilters(newFilters)
-                showFilterDialog = false
-            }
-        )
+    val pullToRefreshState = rememberPullToRefreshState()
+    if (pullToRefreshState.isRefreshing) {
+        LaunchedEffect(true) {
+            listViewModel.fetchRooms()
+        }
+    }
+
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            pullToRefreshState.startRefresh()
+        } else {
+            pullToRefreshState.endRefresh()
+        }
+    }
+
+    // Call user initialization when the screen is first launched
+    LaunchedEffect(Unit) {
+        if (currentUser == null) {
+            mainViewModel.initializeUser()
+        }
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -62,6 +80,17 @@ fun RoomListScreen(
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
+    }
+
+    if (showFilterDialog) {
+        FilterDialog(
+            currentFilters = filters,
+            onDismiss = { showFilterDialog = false },
+            onApply = { newFilters ->
+                listViewModel.updateSortFilters(newFilters)
+                showFilterDialog = false
+            }
+        )
     }
 
     Scaffold(
@@ -107,17 +136,46 @@ fun RoomListScreen(
             }
         }
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.padding(innerPadding).padding(horizontal = 8.dp)) {
-            items(rooms, key = { it.id }) { room ->
-                RoomItem(
-                    room = room,
-                    currentUserName = currentUser?.username ?: "",
-                    isAdmin = currentUser?.isAdmin == true,
-                    onEditClick = onEditClick,
-                    onDeleteClick = { listViewModel.deleteRoom(room.id) },
-                    onStatusChange = { roomId, status -> listViewModel.updateRoomStatus(roomId, status) }
-                )
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .nestedScroll(pullToRefreshState.nestedScrollConnection)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)) {
+                items(rooms, key = { it.id }) { room ->
+                    RoomItem(
+                        room = room,
+                        currentUserName = currentUser?.username ?: "",
+                        isAdmin = currentUser?.isAdmin == true,
+                        onEditClick = onEditClick,
+                        onDeleteClick = { listViewModel.deleteRoom(room.id) },
+                        onStatusChange = { roomId, status -> listViewModel.updateRoomStatus(roomId, status) }
+                    )
+                }
             }
+            if (currentUser == null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f))
+                        .clickable(enabled = false, onClick = {}), // Prevent clicks from passing through
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("ユーザー情報を読み込み中...", color = Color.White)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { mainViewModel.initializeUser() }) {
+                        Text("再試行")
+                    }
+                }
+            }
+            PullToRefreshContainer(
+                modifier = Modifier.align(Alignment.TopCenter),
+                state = pullToRefreshState,
+            )
         }
     }
 }

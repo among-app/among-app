@@ -55,16 +55,22 @@ class RoomListViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
         fetchRooms()
     }
 
     fun fetchRooms() {
         viewModelScope.launch {
+            _isRefreshing.value = true
             try {
                 _allRooms.value = repository.getRooms()
             } catch (e: Exception) {
                 Log.e("RoomListViewModel", "Error fetching rooms", e)
+            } finally {
+                _isRefreshing.value = false
             }
         }
     }
