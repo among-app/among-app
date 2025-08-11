@@ -28,6 +28,9 @@ interface ApiService {
     @PUT("users/{id}")
     suspend fun updateUser(@Header("x-device-id") deviceId: String, @Path("id") id: Int, @Body userUpdate: UserUpdate): User
 
+    @PUT("users/me")
+    suspend fun updateMyUser(@Header("x-device-id") deviceId: String, @Body userUpdate: UserUpdate): User
+
     @GET("rooms/")
     suspend fun getRooms(): List<Room>
 

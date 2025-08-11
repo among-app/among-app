@@ -41,6 +41,7 @@ class UserCreate(BaseModel):
     username: str
 
 class UserUpdate(BaseModel):
+    username: Optional[str] = None
     isAdmin: Optional[bool] = None
     isBanned: Optional[bool] = None
     isVerified: Optional[bool] = None

@@ -35,6 +35,10 @@ def get_admin_user(current_user: Annotated[models.User, Depends(get_current_user
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_device_id(db, device_id=user.deviceId)
     if db_user:
+        # If user exists, check if username needs to be updated
+        if db_user.username != user.username:
+            update_data = schemas.UserUpdate(username=user.username) # Create UserUpdate schema
+            return crud.update_user(db, user_id=db_user.id, user_update=update_data)
         return db_user
     return crud.create_user(db=db, user=user)
 
@@ -46,6 +50,14 @@ def read_users(
     db: Session = Depends(get_db)
 ):
     return crud.get_users(db, skip=skip, limit=limit)
+
+@app.put("/users/me", response_model=schemas.User)
+def update_current_user(
+    user_update: schemas.UserUpdate,
+    current_user: Annotated[models.User, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    return crud.update_user(db, user_id=current_user.id, user_update=user_update)
 
 @app.put("/users/{user_id}", response_model=schemas.User)
 def update_user_permissions(

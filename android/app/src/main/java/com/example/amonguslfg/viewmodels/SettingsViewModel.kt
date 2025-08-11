@@ -31,7 +31,13 @@ class SettingsViewModel @Inject constructor(
 
     fun saveUserName() {
         viewModelScope.launch {
-            userDataRepository.saveUserName(_userName.value)
+            try {
+                userDataRepository.saveUserName(_userName.value)
+                userDataRepository.updateMyUsername(_userName.value)
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Failed to save username", e)
+                // Optionally, show an error message to the user
+            }
         }
     }
 }

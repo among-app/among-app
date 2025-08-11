@@ -63,4 +63,10 @@ class UserDataRepository @Inject constructor(
         val deviceId = deviceIdFlow.first()
         return apiService.updateUser(deviceId, userId, userUpdate)
     }
+
+    suspend fun updateMyUsername(username: String): User {
+        val deviceId = deviceIdFlow.first()
+        val userUpdate = UserUpdate(username = username)
+        return apiService.updateMyUser(deviceId, userUpdate)
+    }
 }
