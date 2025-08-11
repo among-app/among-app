@@ -1,16 +1,14 @@
 from sqlalchemy.orm import Session
-
 from . import models, schemas
 
-# User CRUD
 def get_user_by_device_id(db: Session, device_id: str):
-    return db.query(models.User).filter(models.User.device_id == device_id).first()
+    return db.query(models.User).filter(models.User.deviceId == device_id).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
     is_admin = False
-    if user.device_id == "ADMIN_DEVICE_ID": # Temporary for testing
+    if user.deviceId == "ADMIN_DEVICE_ID":
         is_admin = True
-    db_user = models.User(device_id=user.device_id, username=user.username, is_admin=is_admin)
+    db_user = models.User(deviceId=user.deviceId, username=user.username, isAdmin=is_admin)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -29,22 +27,27 @@ def update_user(db: Session, user_id: int, user_update: schemas.UserUpdate):
         db.refresh(db_user)
     return db_user
 
-# Room CRUD
 def get_room(db: Session, room_id: int):
     return db.query(models.Room).filter(models.Room.id == room_id).first()
 
 def get_room_by_code(db: Session, room_code: str):
-    return db.query(models.Room).filter(models.Room.room_code == room_code).first()
+    return db.query(models.Room).filter(models.Room.roomCode == room_code).first()
 
 def get_rooms(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Room).offset(skip).limit(limit).all()
+    return db.query(models.Room).order_by(models.Room.createdAt.desc()).offset(skip).limit(limit).all()
 
 def create_room(db: Session, room: schemas.RoomCreate, owner_id: int):
     regulation_str = ",".join(room.regulation)
     db_room = models.Room(
-        owner_id=owner_id,
+        ownerId=owner_id,
         regulation=regulation_str,
-        **room.dict(exclude={"regulation"})
+        roomCode=room.roomCode,
+        currentPlayers=room.currentPlayers,
+        maxPlayers=room.maxPlayers,
+        modName=room.modName,
+        serverName=room.serverName,
+        description=room.description,
+        isSpecial=room.isSpecial
     )
     db.add(db_room)
     db.commit()
@@ -68,9 +71,8 @@ def delete_room(db: Session, room_id: int):
         db.commit()
     return db_room
 
-# Announcement CRUD
 def get_announcements(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Announcement).offset(skip).limit(limit).all()
+    return db.query(models.Announcement).order_by(models.Announcement.createdAt.desc()).offset(skip).limit(limit).all()
 
 def create_announcement(db: Session, announcement: schemas.AnnouncementCreate):
     db_announcement = models.Announcement(**announcement.dict())
