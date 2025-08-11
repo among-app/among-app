@@ -190,3 +190,21 @@ def read_announcements(skip: int = 0, limit: int = 100, db: Session = Depends(ge
 @app.post("/announcements/", response_model=schemas.Announcement)
 def create_announcement(announcement: schemas.AnnouncementCreate, admin_user: Annotated[models.User, Depends(get_admin_user)], db: Session = Depends(get_db)):
     return crud.create_announcement(db=db, announcement=announcement)
+
+@app.put("/announcements/{announcement_id}", response_model=schemas.Announcement)
+def update_announcement(
+    announcement_id: int,
+    announcement: schemas.AnnouncementCreate,
+    admin_user: Annotated[models.User, Depends(get_admin_user)],
+    db: Session = Depends(get_db)
+):
+    return crud.update_announcement(db, announcement_id=announcement_id, announcement=announcement)
+
+@app.delete("/announcements/{announcement_id}")
+def delete_announcement(
+    announcement_id: int,
+    admin_user: Annotated[models.User, Depends(get_admin_user)],
+    db: Session = Depends(get_db)
+):
+    crud.delete_announcement(db, announcement_id=announcement_id)
+    return {"detail": "Announcement deleted successfully"}

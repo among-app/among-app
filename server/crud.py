@@ -140,3 +140,19 @@ def create_announcement(db: Session, announcement: schemas.AnnouncementCreate):
     db.commit()
     db.refresh(db_announcement)
     return db_announcement
+
+def update_announcement(db: Session, announcement_id: int, announcement: schemas.AnnouncementCreate):
+    db_announcement = db.query(models.Announcement).filter(models.Announcement.id == announcement_id).first()
+    if db_announcement:
+        db_announcement.title = announcement.title
+        db_announcement.content = announcement.content
+        db.commit()
+        db.refresh(db_announcement)
+    return db_announcement
+
+def delete_announcement(db: Session, announcement_id: int):
+    db_announcement = db.query(models.Announcement).filter(models.Announcement.id == announcement_id).first()
+    if db_announcement:
+        db.delete(db_announcement)
+        db.commit()
+    return db_announcement

@@ -50,6 +50,18 @@ class AnnouncementManagerViewModel @Inject constructor(
         }
     }
 
+    fun updateAnnouncement(id: Int, title: String, content: String) {
+        viewModelScope.launch {
+            try {
+                val deviceId = userDataRepository.deviceIdFlow.first()
+                repository.updateAnnouncement(deviceId, id, AnnouncementCreate(title, content))
+                fetchAnnouncements() // Refresh list
+            } catch (e: Exception) {
+                Log.e("AnnouncementsViewModel", "Error updating announcement", e)
+            }
+        }
+    }
+
     fun deleteAnnouncement(id: Int) {
         viewModelScope.launch {
             try {

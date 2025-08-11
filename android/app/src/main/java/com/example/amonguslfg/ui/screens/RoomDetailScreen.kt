@@ -38,11 +38,11 @@ fun RoomDetailScreen(
                 // Re-use RoomItem for consistent display
                 RoomItem(
                     room = it,
-                    currentUserName = "", // Not needed for detail view
-                    isAdmin = false, // Not needed for detail view
+                    currentUserName = "",
+                    isAdmin = false,
                     onEditClick = {},
-                    onDeleteClick = {}
-                    // Modifier.padding(it) was problematic here, handled by the Box now
+                    onDeleteClick = {},
+                    onStatusChange = { _, _ -> } // Add dummy lambda for status change
                 )
             } ?: run {
                 // Optional: Show a loading indicator or an error message

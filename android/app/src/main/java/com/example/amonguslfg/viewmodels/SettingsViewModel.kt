@@ -1,5 +1,5 @@
 package com.example.amonguslfg.viewmodels
-
+import kotlinx.coroutines.flow.first
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

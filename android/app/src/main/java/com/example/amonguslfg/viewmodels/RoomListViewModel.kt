@@ -32,27 +32,25 @@ class RoomListViewModel @Inject constructor(
     val rooms: StateFlow<List<Room>> = combine(_allRooms, _sortFilters) { rooms, filters ->
         rooms.filter { room ->
             val regulationMatch = if (filters.regulations.isNotEmpty()) {
-                // For multi-select regulations, check if any of the room's regulations match
                 room.regulation.split(",").any { it in filters.regulations }
             } else {
-                true // No filter applied
+                true
             }
-
             val modMatch = if (filters.mods.isNotEmpty()) {
                 filters.mods.contains(room.modName)
             } else {
-                true // No filter applied
+                true
             }
-
             regulationMatch && modMatch
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val displayRooms = rooms.map { roomList ->
+    val displayRooms = combine(rooms, userName) { roomList, currentUserName ->
+        val statusOrder = mapOf("recruiting" to 0, "playing" to 1)
         roomList.sortedWith(
             compareByDescending<Room> { it.isSpecial }
-                .thenByDescending { it.owner.username == userName.value }
-                .thenBy { it.status != "recruiting" } // recruiting first
+                .thenByDescending { it.owner.username == currentUserName }
+                .thenBy { statusOrder[it.status] ?: 2 } // recruiting (0) -> playing (1) -> other (2)
                 .thenByDescending { it.createdAt }
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())

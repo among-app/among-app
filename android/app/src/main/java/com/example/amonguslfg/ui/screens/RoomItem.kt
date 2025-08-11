@@ -16,6 +16,16 @@ import androidx.compose.ui.unit.dp
 import com.example.amonguslfg.model.Room
 
 @Composable
+fun RoomStatusText(status: String) {
+    val (text, color) = when (status) {
+        "playing" -> "プレイ中" to Color.Red
+        "recruiting" -> "募集中" to Color(0xFF008000) // Dark Green
+        else -> "不明" to Color.Gray
+    }
+    Text(text = text, color = color, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+}
+
+@Composable
 fun RoomItem(
     room: Room,
     currentUserName: String,
@@ -50,31 +60,15 @@ fun RoomItem(
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "部屋主: ${room.owner.username}",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
-                if (isAdmin || (room.owner.username == currentUserName && currentUserName.isNotBlank())) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        if (room.owner.username == currentUserName) { // Status change is only for the owner
-                             val isPlaying = room.status == "playing"
-                             Button(onClick = { onStatusChange(room.id, if (isPlaying) "recruiting" else "playing") }) {
-                                 Text(if (isPlaying) "募集中" else "プレイ中")
-                             }
-                             Spacer(modifier = Modifier.width(8.dp))
-                        }
-                        IconButton(onClick = { onEditClick(room.id) }) {
-                            Icon(Icons.Default.Edit, contentDescription = "編集")
-                        }
-                        IconButton(onClick = { onDeleteClick(room.id) }) {
-                            Icon(Icons.Default.Delete, contentDescription = "削除")
-                        }
-                    }
-                }
+                RoomStatusText(room.status)
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "ルームコード: ${room.roomCode}", style = MaterialTheme.typography.bodyMedium)
@@ -86,6 +80,26 @@ fun RoomItem(
                 if(it.isNotBlank()){
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            if (isAdmin || (room.owner.username == currentUserName && currentUserName.isNotBlank())) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val isPlaying = room.status == "playing"
+                    Button(onClick = { onStatusChange(room.id, if (isPlaying) "recruiting" else "playing") }) {
+                        Text(if (isPlaying) "募集中にする" else "プレイ中にする")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(onClick = { onEditClick(room.id) }) {
+                        Icon(Icons.Default.Edit, contentDescription = "編集")
+                    }
+                    IconButton(onClick = { onDeleteClick(room.id) }) {
+                        Icon(Icons.Default.Delete, contentDescription = "削除")
+                    }
                 }
             }
         }
