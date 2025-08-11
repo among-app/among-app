@@ -10,7 +10,10 @@ SQLALCHEMY_DATABASE_URL = "postgres://koyeb-adm:npg_MQgIqjY59PLH@ep-delicate-que
 if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    pool_pre_ping=True # Add this line to ensure connection is alive
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

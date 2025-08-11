@@ -14,10 +14,6 @@ services:
     routes:
       - path: /
         port: 8000
-    env:
-      - key: DATABASE_URL
-        scope: secret
-        secret: amongus-lfg-db-url # この名前のSecretをKoyebで作成します
 
 databases:
   - name: amongus-lfg-db

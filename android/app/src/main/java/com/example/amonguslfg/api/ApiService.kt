@@ -15,10 +15,12 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
+import com.example.amonguslfg.model.UserCreate
+
 interface ApiService {
 
     @POST("register/")
-    suspend fun register(@Body deviceId: Map<String, String>): User
+    suspend fun register(@Body userCreate: UserCreate): User
 
     @GET("users/")
     suspend fun getUsers(@Header("x-device-id") deviceId: String): List<User>

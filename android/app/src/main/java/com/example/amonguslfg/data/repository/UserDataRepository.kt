@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.amonguslfg.api.ApiService
 import com.example.amonguslfg.model.User
+import com.example.amonguslfg.model.UserCreate
 import com.example.amonguslfg.model.UserUpdate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -49,7 +50,8 @@ class UserDataRepository @Inject constructor(
         }
         Log.d("UserDataRepository", "Your Device ID is: $deviceId")
         val username = userNameFlow.first().ifBlank { "Anonymous" }
-        return apiService.register(mapOf("device_id" to deviceId, "username" to username))
+        val userCreate = UserCreate(deviceId = deviceId, username = username)
+        return apiService.register(userCreate)
     }
 
     suspend fun getUsers(): List<User> {
