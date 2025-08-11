@@ -39,7 +39,7 @@ class RoomListViewModel @Inject constructor(
             }
 
             val modMatch = if (filters.mods.isNotEmpty()) {
-                filters.mods.contains(room.mod_name)
+                filters.mods.contains(room.modName)
             } else {
                 true // No filter applied
             }

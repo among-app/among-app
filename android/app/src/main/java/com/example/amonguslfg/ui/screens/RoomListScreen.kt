@@ -69,7 +69,7 @@ fun RoomListScreen(
             TopAppBar(
                 title = { Text("募集一覧") },
                 actions = {
-                    if (currentUser?.is_admin == true) {
+                    if (currentUser?.isAdmin == true) { // Corrected: is_admin to isAdmin
                         IconButton(onClick = onAdminClick) {
                             Icon(Icons.Default.AdminPanelSettings, contentDescription = "管理者メニュー")
                         }
@@ -112,7 +112,7 @@ fun RoomListScreen(
                 RoomItem(
                     room = room,
                     currentUserName = currentUserName,
-                    isAdmin = currentUser?.is_admin == true,
+                    isAdmin = currentUser?.isAdmin == true, // Corrected: is_admin to isAdmin
                     onEditClick = onEditClick,
                     onDeleteClick = { listViewModel.deleteRoom(room.id) }
                 )
@@ -155,8 +155,10 @@ fun FilterDialog(
                                     selectedRegulations + option
                                 }
                             }
+                            .padding(vertical = 4.dp)
                     ) {
                         Checkbox(checked = selectedRegulations.contains(option), onCheckedChange = null)
+                        Spacer(modifier = Modifier.width(16.dp))
                         Text(option)
                     }
                 }
@@ -174,8 +176,10 @@ fun FilterDialog(
                                     selectedMods + option
                                 }
                             }
+                            .padding(vertical = 4.dp)
                     ) {
                         Checkbox(checked = selectedMods.contains(option), onCheckedChange = null)
+                        Spacer(modifier = Modifier.width(16.dp))
                         Text(option)
                     }
                 }

@@ -60,7 +60,10 @@ fun CreateRoomScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is CreateRoomUiState.Success -> {
-                navController.popBackStack()
+                navController.navigate("roomDetail/${state.newRoomId}") {
+                    // Pop up to the list screen to remove create screen from back stack
+                    popUpTo("roomList")
+                }
             }
             is CreateRoomUiState.Error -> {
                 snackbarHostState.showSnackbar(message = state.message)

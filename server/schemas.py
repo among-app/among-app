@@ -2,82 +2,69 @@ from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional, List
 
-# Base Pydantic model for request bodies (uses default snake_case)
-class RequestBaseModel(BaseModel):
-    pass
-
-# Base Pydantic model for responses (generates camelCase aliases)
-class ResponseBaseModel(BaseModel):
-    model_config = ConfigDict(
-        alias_generator=lambda string: ''.join(word.capitalize() if i != 0 else word for i, word in enumerate(string.split('_'))),
-        from_attributes=True,
-        populate_by_name=True # Allows both alias and field name population
-    )
+orm_config = ConfigDict(from_attributes=True)
 
 # --- User Schemas ---
-class UserBase(ResponseBaseModel):
-    username: str
-
-class UserCreate(RequestBaseModel): # For request body
-    device_id: str
-    username: str
-
-class User(UserBase): # For response
+class User(BaseModel):
+    model_config = orm_config
     id: int
-    device_id: str
-    is_admin: bool
-    is_banned: bool
-    is_verified: bool
+    deviceId: str
+    username: str
+    isAdmin: bool
+    isBanned: bool
+    isVerified: bool
 
-class UserUpdate(RequestBaseModel): # For request body
-    is_admin: Optional[bool] = None
-    is_banned: Optional[bool] = None
-    is_verified: Optional[bool] = None
+class UserCreate(BaseModel):
+    deviceId: str
+    username: str
+
+class UserUpdate(BaseModel):
+    isAdmin: Optional[bool] = None
+    isBanned: Optional[bool] = None
+    isVerified: Optional[bool] = None
 
 # --- Room Schemas ---
-class RoomBase(ResponseBaseModel):
-    room_code: str
-    current_players: int
-    max_players: int
-    regulation: str
-    mod_name: str
-    server_name: str
-    description: Optional[str] = None
-
-class RoomCreate(RequestBaseModel): # For request body
-    room_code: str
-    current_players: int
-    max_players: int
-    regulation: List[str]
-    mod_name: str
-    server_name: str
-    description: Optional[str] = None
-    is_special: Optional[bool] = False
-
-class RoomUpdate(RequestBaseModel): # For request body
-    current_players: Optional[int] = None
-    max_players: Optional[int] = None
-    regulation: Optional[str] = None
-    mod_name: Optional[str] = None
-    server_name: Optional[str] = None
-    description: Optional[str] = None
-    is_special: Optional[bool] = None
-
-class Room(RoomBase): # For response
+class Room(BaseModel):
+    model_config = orm_config
     id: int
-    created_at: datetime
-    is_special: bool
+    roomCode: str
+    currentPlayers: int
+    maxPlayers: int
+    regulation: str
+    modName: str
+    serverName: str
+    description: Optional[str] = None
+    createdAt: datetime
+    isSpecial: bool
     owner: User
 
+class RoomCreate(BaseModel):
+    roomCode: str
+    currentPlayers: int
+    maxPlayers: int
+    regulation: List[str]
+    modName: str
+    serverName: str
+    description: Optional[str] = None
+    isSpecial: Optional[bool] = False
+
+class RoomUpdate(BaseModel):
+    currentPlayers: Optional[int] = None
+    maxPlayers: Optional[int] = None
+    regulation: Optional[str] = None
+    modName: Optional[str] = None
+    serverName: Optional[str] = None
+    description: Optional[str] = None
+    isSpecial: Optional[bool] = None
+
 # --- Announcement Schemas ---
-class AnnouncementBase(ResponseBaseModel):
-    title: str
-    content: str
-
-class AnnouncementCreate(RequestBaseModel): # For request body
-    title: str
-    content: str
-
-class Announcement(AnnouncementBase): # For response
+class Announcement(BaseModel):
+    model_config = orm_config
     id: int
-    created_at: datetime
+    title: str
+    content: str
+    createdAt: datetime
+
+class AnnouncementCreate(BaseModel):
+    title: str
+    content: str

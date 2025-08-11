@@ -6,5 +6,5 @@ data class Announcement(
     val id: Int,
     val title: String,
     val content: String,
-    val created_at: Date
+    val createdAt: Date
 )

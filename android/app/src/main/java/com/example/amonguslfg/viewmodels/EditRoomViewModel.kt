@@ -24,53 +24,81 @@ class EditRoomViewModel @Inject constructor(
 
     private val roomId: Int = checkNotNull(savedStateHandle["roomId"])
 
+    // Form states
     val roomCode = MutableStateFlow("")
     val currentPlayers = MutableStateFlow("1")
     val maxPlayers = MutableStateFlow(10f)
-    val regulation = MutableStateFlow("")
+    val regulations = MutableStateFlow<List<String>>(emptyList())
     val mod = MutableStateFlow("")
+    val modOtherText = MutableStateFlow("")
     val server = MutableStateFlow("")
+    val serverOtherText = MutableStateFlow("")
     val description = MutableStateFlow("")
 
-    private val _updateSuccess = MutableStateFlow(false)
-    val updateSuccess = _updateSuccess.asStateFlow()
+    private val _uiState = MutableStateFlow<CreateRoomUiState>(CreateRoomUiState.Idle)
+    val uiState = _uiState.asStateFlow()
 
     init {
+        loadRoomDetails()
+    }
+
+    private fun loadRoomDetails() {
         viewModelScope.launch {
             try {
-                val room = roomRepository.getRooms().find { it.id == roomId }
+                val room = roomRepository.getRoomById(roomId)
+                Log.d("EditRoomViewModel", "Fetched room: $room")
                 room?.let {
-                    roomCode.value = it.room_code
-                    currentPlayers.value = it.current_players.toString()
-                    maxPlayers.value = it.max_players.toFloat()
-                    regulation.value = it.regulation
-                    mod.value = it.mod_name
-                    server.value = it.server_name
+                    roomCode.value = it.roomCode ?: ""
+                    currentPlayers.value = it.currentPlayers.toString()
+                    maxPlayers.value = it.maxPlayers.toFloat()
+                    regulations.value = it.regulation?.split(",")?.filter { it.isNotBlank() } ?: emptyList()
+                    mod.value = it.modName ?: ""
+                    server.value = it.serverName ?: ""
                     description.value = it.description ?: ""
                 }
             } catch (e: Exception) {
                 Log.e("EditRoomViewModel", "Error fetching room data", e)
+                _uiState.value = CreateRoomUiState.Error("募集情報の読み込みに失敗しました")
             }
         }
+    }
+    
+    fun onRegulationSelected(regulation: String) {
+        val currentSelection = regulations.value.toMutableList()
+        if (currentSelection.contains(regulation)) {
+            currentSelection.remove(regulation)
+        } else {
+            currentSelection.add(regulation)
+        }
+        regulations.value = currentSelection
     }
 
     fun updateRoom() {
         viewModelScope.launch {
+            _uiState.value = CreateRoomUiState.Loading
             try {
+                val finalModName = if (mod.value == "その他") modOtherText.value else mod.value
+                val finalServerName = if (server.value == "その他") serverOtherText.value else server.value
+
                 val roomToUpdate = RoomUpdate(
                     currentPlayers = currentPlayers.value.toIntOrNull(),
                     maxPlayers = maxPlayers.value.roundToInt(),
-                    regulation = regulation.value,
-                    modName = mod.value,
-                    serverName = server.value,
+                    regulation = regulations.value.joinToString(","),
+                    modName = finalModName,
+                    serverName = finalServerName,
                     description = description.value.takeIf { it.isNotBlank() }
                 )
                 val deviceId = userDataRepository.deviceIdFlow.first()
-                roomRepository.updateRoom(deviceId, roomId, roomToUpdate)
-                _updateSuccess.value = true
+                val updatedRoom = roomRepository.updateRoom(deviceId, roomId, roomToUpdate)
+                _uiState.value = CreateRoomUiState.Success(updatedRoom.id)
             } catch (e: Exception) {
                 Log.e("EditRoomViewModel", "Error updating room", e)
+                _uiState.value = CreateRoomUiState.Error(e.message ?: "更新に失敗しました")
             }
         }
+    }
+
+    fun resetUiState() {
+        _uiState.value = CreateRoomUiState.Idle
     }
 }

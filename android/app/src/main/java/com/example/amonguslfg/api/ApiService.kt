@@ -29,6 +29,9 @@ interface ApiService {
     @GET("rooms/")
     suspend fun getRooms(): List<Room>
 
+    @GET("rooms/{room_id}")
+    suspend fun getRoomById(@Path("room_id") roomId: Int): Room
+
     @POST("rooms/")
     suspend fun createRoom(@Header("x-device-id") deviceId: String, @Body room: RoomCreate): Room
 

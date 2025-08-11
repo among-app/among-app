@@ -95,8 +95,8 @@ class CreateRoomViewModel @Inject constructor(
                     isSpecial = isSpecial.value
                 )
                 val deviceId = userDataRepository.deviceIdFlow.first()
-                roomRepository.createRoom(deviceId, roomToCreate)
-                _uiState.value = CreateRoomUiState.Success
+                val newRoom = roomRepository.createRoom(deviceId, roomToCreate)
+                _uiState.value = CreateRoomUiState.Success(newRoom.id)
             } catch (e: HttpException) {
                 val errorBody = e.response()?.errorBody()?.string() ?: "不明なエラー"
                 Log.e("CreateRoomViewModel", "Error creating room: $errorBody", e)

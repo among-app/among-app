@@ -1,6 +1,7 @@
 package com.example.amonguslfg.ui.screens
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -11,12 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.amonguslfg.model.Room
-import com.example.amonguslfg.model.User
-import com.example.amonguslfg.ui.theme.AmongUsLFGTheme
-import java.util.Date
 
 @Composable
 fun RoomItem(
@@ -27,7 +24,7 @@ fun RoomItem(
     onDeleteClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardModifier = if (room.is_special) {
+    val cardModifier = if (room.isSpecial) {
         modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
@@ -65,11 +62,11 @@ fun RoomItem(
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "ルームコード: ${room.room_code}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "人数: ${room.current_players} / ${room.max_players}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "ルームコード: ${room.roomCode}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "人数: ${room.currentPlayers} / ${room.maxPlayers}", style = MaterialTheme.typography.bodyMedium)
             Text(text = "レギュレーション: ${room.regulation}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "MOD: ${room.mod_name}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "サーバー: ${room.server_name}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "MOD: ${room.modName}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "サーバー: ${room.serverName}", style = MaterialTheme.typography.bodyMedium)
             room.description?.let {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "備考: $it", style = MaterialTheme.typography.bodySmall)

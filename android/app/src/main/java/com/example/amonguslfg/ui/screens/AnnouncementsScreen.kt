@@ -36,10 +36,10 @@ fun AnnouncementsScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues -> // Changed it to paddingValues
         LazyColumn(
             modifier = Modifier
-                .padding(it)
+                .padding(paddingValues) // Used paddingValues
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -58,7 +58,7 @@ fun AnnouncementItem(announcement: Announcement) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = announcement.content, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = announcement.created_at.toString(), style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+            Text(text = announcement.createdAt.toString(), style = MaterialTheme.typography.bodySmall, color = Color.Gray) // Corrected: created_at to createdAt
         }
     }
 }

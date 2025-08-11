@@ -45,11 +45,18 @@ fun AppNavigation() {
         composable("userManager") {
             UserManagerScreen(navController = navController)
         }
+
         composable(
             route = "editRoom/{roomId}",
             arguments = listOf(navArgument("roomId") { type = NavType.IntType })
         ) {
             EditRoomScreen(navController = navController)
+        }
+        composable(
+            route = "roomDetail/{roomId}",
+            arguments = listOf(navArgument("roomId") { type = NavType.IntType })
+        ) {
+            RoomDetailScreen(navController = navController)
         }
     }
 }

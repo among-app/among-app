@@ -12,6 +12,10 @@ class RoomRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.getRooms()
     }
 
+    suspend fun getRoomById(roomId: Int): Room {
+        return apiService.getRoomById(roomId)
+    }
+
     suspend fun createRoom(deviceId: String, room: RoomCreate): Room {
         return apiService.createRoom(deviceId, room)
     }

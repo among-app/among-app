@@ -6,6 +6,7 @@ import com.example.amonguslfg.viewmodels.AnnouncementsViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.CreateRoomViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.EditRoomViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.MainViewModel_HiltModules;
+import com.example.amonguslfg.viewmodels.RoomDetailViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.RoomListViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.SettingsViewModel_HiltModules;
 import com.example.amonguslfg.viewmodels.UserManagerViewModel_HiltModules;
@@ -160,6 +161,7 @@ public final class LfgApplication_HiltComponents {
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
           MainViewModel_HiltModules.KeyModule.class,
+          RoomDetailViewModel_HiltModules.KeyModule.class,
           RoomListViewModel_HiltModules.KeyModule.class,
           SettingsViewModel_HiltModules.KeyModule.class,
           UserManagerViewModel_HiltModules.KeyModule.class
@@ -204,6 +206,7 @@ public final class LfgApplication_HiltComponents {
           EditRoomViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           MainViewModel_HiltModules.BindsModule.class,
+          RoomDetailViewModel_HiltModules.BindsModule.class,
           RoomListViewModel_HiltModules.BindsModule.class,
           SettingsViewModel_HiltModules.BindsModule.class,
           UserManagerViewModel_HiltModules.BindsModule.class

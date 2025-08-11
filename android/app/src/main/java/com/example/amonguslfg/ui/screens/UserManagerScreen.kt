@@ -35,9 +35,9 @@ fun UserManagerScreen(
                 }
             )
         }
-    ) {
+    ) { paddingValues -> // Changed it to paddingValues
         LazyColumn(
-            modifier = Modifier.padding(it).padding(16.dp),
+            modifier = Modifier.padding(paddingValues).padding(16.dp), // Used paddingValues
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(users) { user ->
@@ -52,19 +52,19 @@ fun UserManagementItem(user: User, onUpdate: (Int, UserUpdate) -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = user.username, style = MaterialTheme.typography.titleMedium)
-            Text(text = "Device ID: ${user.device_id}", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Device ID: ${user.deviceId}", style = MaterialTheme.typography.bodySmall) // Corrected: device_id to deviceId
             Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Text("認証済み")
-                Switch(checked = user.is_verified, onCheckedChange = { onUpdate(user.id, UserUpdate(isVerified = it)) })
+                Switch(checked = user.isVerified, onCheckedChange = { onUpdate(user.id, UserUpdate(isVerified = it)) }) // Corrected: is_verified to isVerified
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Text("管理者")
-                Switch(checked = user.is_admin, onCheckedChange = { onUpdate(user.id, UserUpdate(isAdmin = it)) })
+                Switch(checked = user.isAdmin, onCheckedChange = { onUpdate(user.id, UserUpdate(isAdmin = it)) }) // Corrected: is_admin to isAdmin
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Text("BAN")
-                Switch(checked = user.is_banned, onCheckedChange = { onUpdate(user.id, UserUpdate(isBanned = it)) })
+                Switch(checked = user.isBanned, onCheckedChange = { onUpdate(user.id, UserUpdate(isBanned = it)) }) // Corrected: is_banned to isBanned
             }
         }
     }
