@@ -22,13 +22,33 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 def update_user(db: Session, user_id: int, user_update: schemas.UserUpdate):
-    db_user = get_user(db, user_id=user_id)
-    if db_user:
-        update_data = user_update.dict(exclude_unset=True)
-        for key, value in update_data.items():
-            setattr(db_user, key, value)
+    print(f"--- Updating user {user_id} ---")
+    print(f"Received update data: {user_update.model_dump()}")
+    
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not db_user:
+        print("User not found in DB.")
+        return None
+
+    print(f"User before update: isAdmin={db_user.isAdmin}, isBanned={db_user.isBanned}, isVerified={db_user.isVerified}")
+
+    update_data = user_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        print(f"Setting {key} = {value}")
+        setattr(db_user, key, value)
+    
+    print(f"User after update in memory: isAdmin={db_user.isAdmin}, isBanned={db_user.isBanned}, isVerified={db_user.isVerified}")
+
+    try:
+        db.add(db_user)
         db.commit()
         db.refresh(db_user)
+        print("Commit successful.")
+        print(f"User after commit: isAdmin={db_user.isAdmin}, isBanned={db_user.isBanned}, isVerified={db_user.isVerified}")
+    except Exception as e:
+        print(f"!!! An error occurred during commit: {e}")
+        db.rollback()
+
     return db_user
 
 def update_fcm_token(db: Session, user_id: int, token: str):

@@ -1,4 +1,3 @@
-
 package com.example.amonguslfg.viewmodels
 
 import android.util.Log
@@ -21,61 +20,58 @@ class UserManagerViewModel @Inject constructor(
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
 
+    private val _updatingUserIds = MutableStateFlow<Set<Int>>(emptySet())
+    val updatingUserIds = _updatingUserIds.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
     init {
         fetchUsers()
     }
 
-    private fun fetchUsers() {
+    fun fetchUsers() {
         viewModelScope.launch {
+            _isRefreshing.value = true
             try {
-                _users.value = userDataRepository.getAllUsers()
+                _users.value = userDataRepository.getUsers()
             } catch (e: Exception) {
                 Log.e("UserManagerViewModel", "Failed to fetch users", e)
             }
+            _isRefreshing.value = false
         }
     }
 
     private fun updateUserInList(updatedUser: User) {
-        val currentUsers = _users.value.toMutableList()
-        val userIndex = currentUsers.indexOfFirst { it.id == updatedUser.id }
-        if (userIndex != -1) {
-            currentUsers[userIndex] = updatedUser
-            _users.value = currentUsers
+        _users.value = _users.value.map {
+            if (it.id == updatedUser.id) updatedUser else it
         }
     }
 
-    fun updateUserAdminStatus(userId: String, isChecked: Boolean) {
+    fun updateUser(userId: Int, update: UserUpdate) {
         viewModelScope.launch {
-            try {
-                val update = UserUpdate(isAdmin = isChecked)
-                val updatedUser = userDataRepository.updateUser(userId.toInt(), update)
-                updateUserInList(updatedUser)
-            } catch (e: Exception) {
-                Log.e("UserManagerViewModel", "Failed to update admin status", e)
+            // Optimistically update the UI before the network call
+            val optimisticUser = _users.value.find { it.id == userId }?.let { user ->
+                update.isAdmin?.let { user.copy(isAdmin = it) } ?: 
+                update.isBanned?.let { user.copy(isBanned = it) } ?: 
+                update.isVerified?.let { user.copy(isVerified = it) } ?: user
             }
-        }
-    }
-
-    fun updateUserBanStatus(userId: String, isChecked: Boolean) {
-        viewModelScope.launch {
-            try {
-                val update = UserUpdate(isBanned = isChecked)
-                val updatedUser = userDataRepository.updateUser(userId.toInt(), update)
-                updateUserInList(updatedUser)
-            } catch (e: Exception) {
-                Log.e("UserManagerViewModel", "Failed to update ban status", e)
+            if (optimisticUser != null) {
+                updateUserInList(optimisticUser)
             }
-        }
-    }
 
-    fun updateUserVerifiedStatus(userId: String, isChecked: Boolean) {
-        viewModelScope.launch {
+            _updatingUserIds.value += userId
             try {
-                val update = UserUpdate(isVerified = isChecked)
-                val updatedUser = userDataRepository.updateUser(userId.toInt(), update)
+                // Then, make the actual network call
+                val updatedUser = userDataRepository.updateUser(userId, update)
+                // And update the list with the true data from the server
                 updateUserInList(updatedUser)
             } catch (e: Exception) {
-                Log.e("UserManagerViewModel", "Failed to update verified status", e)
+                Log.e("UserManagerViewModel", "Failed to update user", e)
+                // If the call fails, refetch to revert the optimistic update
+                fetchUsers()
+            } finally {
+                _updatingUserIds.value -= userId
             }
         }
     }

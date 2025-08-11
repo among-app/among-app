@@ -23,23 +23,23 @@ import javax.inject.Provider;
     "cast"
 })
 public final class UserManagerViewModel_Factory implements Factory<UserManagerViewModel> {
-  private final Provider<UserDataRepository> repositoryProvider;
+  private final Provider<UserDataRepository> userDataRepositoryProvider;
 
-  public UserManagerViewModel_Factory(Provider<UserDataRepository> repositoryProvider) {
-    this.repositoryProvider = repositoryProvider;
+  public UserManagerViewModel_Factory(Provider<UserDataRepository> userDataRepositoryProvider) {
+    this.userDataRepositoryProvider = userDataRepositoryProvider;
   }
 
   @Override
   public UserManagerViewModel get() {
-    return newInstance(repositoryProvider.get());
+    return newInstance(userDataRepositoryProvider.get());
   }
 
   public static UserManagerViewModel_Factory create(
-      Provider<UserDataRepository> repositoryProvider) {
-    return new UserManagerViewModel_Factory(repositoryProvider);
+      Provider<UserDataRepository> userDataRepositoryProvider) {
+    return new UserManagerViewModel_Factory(userDataRepositoryProvider);
   }
 
-  public static UserManagerViewModel newInstance(UserDataRepository repository) {
-    return new UserManagerViewModel(repository);
+  public static UserManagerViewModel newInstance(UserDataRepository userDataRepository) {
+    return new UserManagerViewModel(userDataRepository);
   }
 }
