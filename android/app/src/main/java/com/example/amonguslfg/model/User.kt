@@ -6,5 +6,6 @@ data class User(
     val username: String,
     val isAdmin: Boolean,
     val isBanned: Boolean,
-    val isVerified: Boolean
+    val isVerified: Boolean,
+    val notificationsEnabled: Boolean
 )

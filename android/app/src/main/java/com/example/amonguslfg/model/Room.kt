@@ -13,5 +13,6 @@ data class Room(
     val description: String?,
     val createdAt: Date,
     val isSpecial: Boolean,
+    val status: String,
     val owner: User
 )

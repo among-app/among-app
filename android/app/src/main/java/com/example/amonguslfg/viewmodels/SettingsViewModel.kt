@@ -19,9 +19,16 @@ class SettingsViewModel @Inject constructor(
     private val _userName = MutableStateFlow("")
     val userName = _userName.asStateFlow()
 
+    private val _notificationsEnabled = MutableStateFlow(true)
+    val notificationsEnabled = _notificationsEnabled.asStateFlow()
+
+    private val _notificationFilters = MutableStateFlow(SortFilters())
+    val notificationFilters = _notificationFilters.asStateFlow()
+
     init {
         viewModelScope.launch {
             _userName.value = userDataRepository.userNameFlow.first()
+            // TODO: Fetch and apply current user settings
         }
     }
 
@@ -32,12 +39,33 @@ class SettingsViewModel @Inject constructor(
     fun saveUserName() {
         viewModelScope.launch {
             try {
-                // First, save to local DataStore
                 userDataRepository.saveUserName(_userName.value)
-                // Then, update the name on the server and refresh the user state
                 userDataRepository.updateMyUsername(_userName.value)
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Failed to save username", e)
+            }
+        }
+    }
+
+    fun onNotificationPreferenceChange(isEnabled: Boolean) {
+        _notificationsEnabled.value = isEnabled
+        saveNotificationSettings()
+    }
+
+    fun updateNotificationFilters(filters: SortFilters) {
+        _notificationFilters.value = filters
+        saveNotificationSettings()
+    }
+
+    private fun saveNotificationSettings() {
+        viewModelScope.launch {
+            try {
+                userDataRepository.updateNotificationSettings(
+                    isEnabled = _notificationsEnabled.value,
+                    filters = _notificationFilters.value
+                )
+            } catch (e: Exception) {
+                Log.e("SettingsViewModel", "Failed to save notification settings", e)
             }
         }
     }

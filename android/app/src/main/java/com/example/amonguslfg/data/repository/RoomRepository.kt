@@ -20,8 +20,14 @@ class RoomRepository @Inject constructor(private val apiService: ApiService) {
         return apiService.createRoom(deviceId, room)
     }
 
+    import com.example.amonguslfg.model.RoomStatusUpdate
+
     suspend fun updateRoom(deviceId: String, roomId: Int, room: RoomUpdate): Room {
         return apiService.updateRoom(deviceId, roomId, room)
+    }
+
+    suspend fun updateRoomStatus(deviceId: String, roomId: Int, status: String): Room {
+        return apiService.updateRoomStatus(deviceId, roomId, RoomStatusUpdate(status))
     }
 
     suspend fun deleteRoom(deviceId: String, roomId: Int) {

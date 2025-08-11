@@ -48,6 +48,15 @@ class RoomListViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val displayRooms = rooms.map { roomList ->
+        roomList.sortedWith(
+            compareByDescending<Room> { it.isSpecial }
+                .thenByDescending { it.owner.username == userName.value }
+                .thenBy { it.status != "recruiting" } // recruiting first
+                .thenByDescending { it.createdAt }
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     init {
         fetchRooms()
     }
@@ -78,6 +87,18 @@ class RoomListViewModel @Inject constructor(
                 fetchRooms() // Refresh the list after deletion
             } catch (e: Exception) {
                 Log.e("RoomListViewModel", "Error deleting room", e)
+            }
+        }
+    }
+
+    fun updateRoomStatus(roomId: Int, status: String) {
+        viewModelScope.launch {
+            try {
+                val deviceId = userDataRepository.deviceIdFlow.first()
+                repository.updateRoomStatus(deviceId, roomId, status)
+                fetchRooms() // Refresh the list after status update
+            } catch (e: Exception) {
+                Log.e("RoomListViewModel", "Error updating room status", e)
             }
         }
     }

@@ -34,7 +34,7 @@ fun RoomListScreen(
     listViewModel: RoomListViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val rooms by listViewModel.rooms.collectAsStateWithLifecycle()
+    val rooms by listViewModel.displayRooms.collectAsStateWithLifecycle() // Use the new sorted list
     val filters by listViewModel.sortFilters.collectAsStateWithLifecycle()
     val currentUserName by listViewModel.userName.collectAsStateWithLifecycle()
     val currentUser by mainViewModel.currentUser.collectAsStateWithLifecycle()
@@ -112,9 +112,10 @@ fun RoomListScreen(
                 RoomItem(
                     room = room,
                     currentUserName = currentUserName,
-                    isAdmin = currentUser?.isAdmin == true, // Corrected: is_admin to isAdmin
+                    isAdmin = currentUser?.isAdmin == true,
                     onEditClick = onEditClick,
-                    onDeleteClick = { listViewModel.deleteRoom(room.id) }
+                    onDeleteClick = { listViewModel.deleteRoom(room.id) },
+                    onStatusChange = { roomId, status -> listViewModel.updateRoomStatus(roomId, status) }
                 )
             }
         }

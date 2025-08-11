@@ -22,8 +22,15 @@ fun RoomItem(
     isAdmin: Boolean,
     onEditClick: (Int) -> Unit,
     onDeleteClick: (Int) -> Unit,
+    onStatusChange: (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val cardColors = when (room.status) {
+        "playing" -> CardDefaults.cardColors(containerColor = Color(0xFFFFF9C4)) // Light Yellow
+        "recruiting" -> CardDefaults.cardColors(containerColor = Color(0xFFC8E6C9)) // Light Green
+        else -> CardDefaults.cardColors()
+    }
+
     val cardModifier = if (room.isSpecial) {
         modifier
             .fillMaxWidth()
@@ -37,6 +44,7 @@ fun RoomItem(
 
     Card(
         modifier = cardModifier,
+        colors = cardColors,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -52,6 +60,15 @@ fun RoomItem(
                 )
                 if (isAdmin || room.owner.username == currentUserName && currentUserName.isNotBlank()) {
                     Row {
+                        if (room.status == "recruiting") {
+                            Button(onClick = { onStatusChange(room.id, "playing") }) {
+                                Text("プレイ中")
+                            }
+                        } else {
+                            Button(onClick = { onStatusChange(room.id, "recruiting") }) {
+                                Text("募集中")
+                            }
+                        }
                         IconButton(onClick = { onEditClick(room.id) }) {
                             Icon(Icons.Default.Edit, contentDescription = "編集")
                         }

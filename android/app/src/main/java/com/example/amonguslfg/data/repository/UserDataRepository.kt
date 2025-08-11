@@ -8,9 +8,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.amonguslfg.api.ApiService
-import com.example.amonguslfg.model.User
-import com.example.amonguslfg.model.UserCreate
-import com.example.amonguslfg.model.UserUpdate
+import com.example.amonguslfg.model.*
+import com.example.amonguslfg.viewmodels.SortFilters
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -72,5 +71,27 @@ class UserDataRepository @Inject constructor(
         val deviceId = deviceIdFlow.first()
         val userUpdate = UserUpdate(username = username)
         _currentUser.value = apiService.updateMyUser(deviceId, userUpdate)
+    }
+
+    suspend fun updateFcmToken(token: String) {
+        val deviceId = deviceIdFlow.first()
+        if (deviceId.isNotBlank()) {
+            apiService.updateFcmToken(deviceId, FcmTokenUpdate(fcmToken = token))
+        }
+    }
+
+    suspend fun updateNotificationSettings(isEnabled: Boolean, filters: SortFilters) {
+        val deviceId = deviceIdFlow.first()
+        if (deviceId.isNotBlank()) {
+            val filterCreates = mutableListOf<NotificationFilterCreate>()
+            filters.regulations.forEach { filterCreates.add(NotificationFilterCreate(filterType = "regulation", filterValue = it)) }
+            filters.mods.forEach { filterCreates.add(NotificationFilterCreate(filterType = "mod", filterValue = it)) }
+            
+            val settingsUpdate = NotificationSettingsUpdate(
+                notificationsEnabled = isEnabled,
+                filters = filterCreates
+            )
+            apiService.updateNotificationSettings(deviceId, settingsUpdate)
+        }
     }
 }

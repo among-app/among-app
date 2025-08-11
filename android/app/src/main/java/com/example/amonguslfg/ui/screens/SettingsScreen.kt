@@ -1,12 +1,14 @@
 package com.example.amonguslfg.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons // Recommended to keep for other icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack // Import for AutoMirrored ArrowBack
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +22,20 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val userName by viewModel.userName.collectAsState()
+    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val notificationFilters by viewModel.notificationFilters.collectAsState()
+    var showFilterDialog by remember { mutableStateOf(false) }
+
+    if (showFilterDialog) {
+        FilterDialog(
+            currentFilters = notificationFilters,
+            onDismiss = { showFilterDialog = false },
+            onApply = { newFilters ->
+                viewModel.updateNotificationFilters(newFilters)
+                showFilterDialog = false
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -37,6 +53,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .padding(it)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             OutlinedTextField(
                 value = userName,
@@ -46,13 +63,31 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {
-                    viewModel.saveUserName()
-                    navController.popBackStack()
-                },
+                onClick = { viewModel.saveUserName() },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("保存")
+                Text("名前を保存")
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text("通知設定", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("通知を受け取る", modifier = Modifier.weight(1f))
+                Switch(
+                    checked = notificationsEnabled,
+                    onCheckedChange = { viewModel.onNotificationPreferenceChange(it) }
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            TextButton(onClick = { showFilterDialog = true }) {
+                Text("通知フィルターを編集")
             }
         }
     }
