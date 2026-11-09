@@ -55,6 +55,9 @@ class UserCreate(BaseModel):
     deviceId: str
     username: str
 
+class UserSelfUpdate(BaseModel):
+    username: Optional[str] = None
+
 class UserUpdate(BaseModel):
     username: Optional[str] = None
     isAdmin: Optional[bool] = None
