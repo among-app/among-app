@@ -63,7 +63,7 @@ def read_users(admin_user: Annotated[models.User, Depends(get_admin_user)], skip
     return crud.get_users(db, skip=skip, limit=limit)
 
 @app.put("/users/me", response_model=schemas.User)
-def update_current_user(user_update: schemas.UserUpdate, current_user: Annotated[models.User, Depends(get_current_user)], db: Session = Depends(get_db)):
+def update_current_user(user_update: schemas.UserSelfUpdate, current_user: Annotated[models.User, Depends(get_current_user)], db: Session = Depends(get_db)):
     return crud.update_user(db, user_id=current_user.id, user_update=user_update)
 
 @app.put("/users/{user_id}", response_model=schemas.User)
